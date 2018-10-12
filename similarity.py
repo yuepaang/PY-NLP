@@ -3,7 +3,7 @@
 We want the intrinsic similarity 
 
 AUTHOR: Yue Peng
-EMAIL: yuepeng@sf-express.com
+EMAIL: ypeng7@outlook.com
 DATE: 2018.10.09
 """
 import os, sys
