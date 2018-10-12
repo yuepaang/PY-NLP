@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-small translater based on baidu fanyi api.
+small translater based on Baidu translation api.
 
 AUTHOR: Yue Peng
-EMAIL: yuepeng@sf-express.com
+EMAIL: ypeng7@outlook.com
 DATE: 2018.10.09
 """
 import http.client
@@ -14,9 +14,9 @@ import random
 
 
 class BaiduTranslate(object):
-    def __init__(self):
-        self._appid = '20181009000217118'
-        self._secretKey = 'hUNxtY0xjFCwKCNEcPfr'
+    def __init__(self, appid, secretKey):
+        self._appid = appid
+        self._secretKey = secretKey
         self.LANG = ["zh", "en", "yue", "wyw", "jp", "kor", "fra", "spa", "th", "ara", "ru", "pt", "de", "it", "el", "nl", "pl", "bul", "est", "dan", "fin", "cs", "rom", "slo", "swe", "hu", "cht", "vie"]
         self.FOREIGN_LANG = [l for l in self.LANG if l != "zh"]
 
@@ -36,8 +36,6 @@ class BaiduTranslate(object):
         httpClient = None
         myurl = '/api/trans/vip/translate'
         q = srcString
-        fromLang = 'en'
-        toLang = 'zh'
         salt = random.randint(32768, 65536)
 
         sign = self._appid + q + str(salt) + self._secretKey
@@ -62,8 +60,8 @@ class BaiduTranslate(object):
 
 
 if __name__ == "__main__":
-    # appid = '20181009000217118'
-    # secretKey = 'hUNxtY0xjFCwKCNEcPfr'
+    # appid = '201810090002171181'
+    # secretKey = 'hUNxtY0xjFCwKCNEcPfr1'
     fromLang = 'en'
     toLang = 'zh'
     fanyi = BaiduTranslate()

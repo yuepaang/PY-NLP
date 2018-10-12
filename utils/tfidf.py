@@ -3,13 +3,14 @@
 TF-IDF Computation.
 
 AUTHOR: Yue Peng
-EMAIL: yuepeng@sf-express.com
+EMAIL: ypeng7@outlook.com
 DATE: 2018.10.03
 """
 import os, sys, math
 import numpy as np
 from sklearn.decomposition import TruncatedSVD
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, os.pardir))
+
 
 tokenize = lambda doc: doc.strip().lower().split(" ")
 

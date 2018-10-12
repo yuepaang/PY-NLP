@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 """
-config module to load configurations
+Configuration Module.
 
 AUTHOR: Yue Peng
-EMAIL: yuepeng@sf-express.com
+EMAIL: ypeng7@outlook.com
 DATE: 2018.10.02
 """
 import sys, os, codecs
+sys.path.append(os.path.dirname(__file__))
 import configparser
 from time import localtime, strftime
-from cores.utils.helper import singleton
+from utils.helper import singleton
 
 CONF_DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -47,7 +48,6 @@ def load_config(filename):
     if not os.path.exists(cf):
         f = codecs.open(cf, "w")
         f.close()
-
     config = configparser.ConfigParser()
     config.read(cf)
     return config
@@ -70,6 +70,7 @@ def read_properties(filename="config.ini"):
     conf["rootDir"] = CONF_DIR
     conf["dataDir"] = os.path.join(CONF_DIR, "data")
     conf["modelDir"] = os.path.join(CONF_DIR, "saved_models")
+    conf["logDir"] = os.path.join(CONF_DIR, "logs")
     return conf
 
 
@@ -79,24 +80,15 @@ class Config(object):
     def __init__(self, ):
         self.ini = read_properties()
         self.root_dir = self.ini["rootDir"]
-        self.config_ini_path = get_cfg_path(filename="config.ini")
         self.data_dir = self.ini["dataDir"]
-        self.user_dict = os.path.join(self.ini["dataDir"], self.ini["data"]["user_dict_fn"])
-        self.embedding = os.path.join(self.ini["dataDir"], self.ini["data"]["embedding_fn"])
-        self.stop_words = os.path.join(self.ini["dataDir"], self.ini["data"]["stopwords_fn"])
-        self.train_path = os.path.join(self.ini["dataDir"], self.ini["data"]["train_data_fn"])
-        self.test_path = os.path.join(self.ini["dataDir"], self.ini["data"]["test_data_fn"])
-        self.hash_4 = os.path.join(self.ini["dataDir"], self.ini["data"]["hash_4_fn"])
-        self.hash_42 = os.path.join(self.ini["dataDir"], self.ini["data"]["hash_42_fn"])
-        self.hash_4_folder = os.path.join(self.ini["dataDir"], self.ini["folders"]["class_4"])
-        self.hash_42_folder = os.path.join(self.ini["dataDir"], self.ini["folders"]["class_42"])
-        self.hash_633_folder = os.path.join(self.ini["dataDir"], self.ini["folders"]["class_633"])
-        self.vocab_path = os.path.join(self.ini["dataDir"], self.ini["data"]["vocab_fn"])
-        self.synonyms_path = os.path.join(self.ini["dataDir"], self.ini["data"]["synonyms_fn"])
-        self.log_path = os.path.join(CONF_DIR, self.ini["log"]["log_folder"])
+        self.log_dir = self.ini["logDir"]
+        self.config_ini_path = get_cfg_path(filename="config.ini")
 
-        self.online_train = os.path.join(self.ini["dataDir"], self.ini["folders"]["online_qa"], self.ini["data"]["online_train"])
-        self.online_test = os.path.join(self.ini["dataDir"], self.ini["folders"]["online_qa"], self.ini["data"]["online_test"])
+        self.user_dict = os.path.join(self.data_dir, self.ini["data"]["user_dict_fn"])
+        self.stop_words = os.path.join(self.data_dir, self.ini["data"]["stopwords_fn"])
+        self.synonyms_path = os.path.join(self.data_dir, self.ini["data"]["synonyms_fn"])
+        self.noun_path = os.path.join(self.data_dir, self.ini["data"]["noun_fn"])
+        self.log_name = os.path.join(self.log_dir, self.ini["log"]["log_fn"])
 
 
 if __name__ == "__main__":

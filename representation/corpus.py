@@ -3,16 +3,16 @@
 Corpus engineering.
 
 AUTHOR: Yue Peng
-EMAIL: yuepeng@sf-express.com
+EMAIL: ypeng7@outlook.com
 DATE: 2018.10.09
 """
 import os, sys
 from copy import deepcopy
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, os.pardir))
 from config import Config
-from cores.utils import log
-from cores.utils.segmenter import Segmenter
-from cores.utils.tools import log_time_delta
+from utils import log
+from utils.segmenter import Segmenter
+from utils.tools import log_time_delta
 
 
 config = Config()

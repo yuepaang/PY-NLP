@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 """
+BM25 Model.
+
 AUTHOR: Yue Peng
-EMAIL: yuepeng@sf-express.com
+EMAIL: ypeng7@outlook.com
 DATE: 2018.08.23
 """
 from math import log

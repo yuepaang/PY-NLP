@@ -6,12 +6,12 @@ AUTHOR: Yue Peng
 EMAIL: yuepeng@sf-express.com
 DATE: 2018.10.02
 """
-import sys, os, codecs, pickle
+import sys, os
 from functools import wraps
 import time
 import numpy as np
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, os.pardir))
-from cores.utils import log
+from utils import log
 
 logger = log.getLogger(__name__)
 
@@ -53,7 +53,7 @@ def softmax(x):
     Returns:
         [np.array] -- [description]
     """
-    assert len(x.shape) == 2
+    assert len(x.shape) == 2, "Input array's dimension must be equal to 2"
     s = np.max(x, axis=1)
     s = s[:, np.newaxis]
     e_x = np.exp(x - s)

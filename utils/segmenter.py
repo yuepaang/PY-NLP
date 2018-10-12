@@ -1,42 +1,44 @@
 # -*- coding: utf-8 -*-
 """
-Segmenter with Chinese based on jieba.
+Segmenter. Transform Sentence to Words
 
 AUTHOR: Yue Peng
-EMAIL: yuepeng@sf-express.com
+EMAIL: ypeng7@outlook.com
 DATE: 2018.10.02
 """
 import os, sys, codecs, re, pickle
-sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, os.pardir))
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
 import jieba
 import jieba.posseg as pseg
-# TODO: download problem on server
-# import nltk
+import nltk
 # nltk.download("stopwords")
 # nltk.download('punkt')
-# from nltk.tokenize import word_tokenize
-# from nltk.corpus import stopwords as stw
-# from nltk.stem.porter import PorterStemmer
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords as stw
+from nltk.stem.porter import PorterStemmer
 import langid
 import logging
 jieba.setLogLevel(logging.INFO)
+
 from config import Config
+
 
 config = Config()
 jieba.load_userdict(config.user_dict)
-# stemmer = PorterStemmer()
-
-UPDATE_DICT = {"丰音": "丰声", "补油": "油补", "考情": "考勤", "于部": "部", "没可": "没有"}
+stemmer = PorterStemmer()
+# If you want more synonyms...
+UPDATE_DICT = {}
 
 
 class Segmenter(object):
     __slots__ = ("_stopwords", "_synonyms")
+
     def __init__(self):
         self._stopwords = [line.strip() for line in codecs.open(config.stop_words, "r", "utf-8").readlines()]
         with codecs.open(config.synonyms_path, "rb") as f:
             self._synonyms = pickle.load(f)
         self._synonyms.update(UPDATE_DICT)
-        # self._stopwords += stw.words("english")
+        self._stopwords += stw.words("english")
         # english_punctuations
         self._stopwords += [',', '.', ':', ';', '?', '(', ')', '[', ']', '!', '@', '#', '%', '$', '*']
 
@@ -91,7 +93,8 @@ class Segmenter(object):
         text = re.sub(r"\d", "0", text)
         yield from jieba.cut(text)
 
-    def segment_chinese_sentence(self, sentence):
+    @staticmethod
+    def segment_chinese_sentence(sentence):
         """Return segmented sentence.
         
         [description]
@@ -104,6 +107,7 @@ class Segmenter(object):
         return seg_sentence.strip()
 
     def process_sentence(self, sentence):
+        assert isinstance(sentence, str), "You must enter a string!"
         """Segmenter for input sentence.
         
         [description]
@@ -114,8 +118,8 @@ class Segmenter(object):
         # Chinese
         if langid.classify(sentence)[0] == "zh":
             tokens = self.tokenize(sentence)
-            # TODO remove_synonyms
-            for token_filter_func in [self._remove_stopwords]:
+            # Two Functional Filters
+            for token_filter_func in [self._remove_stopwords, self._remove_synonyms]:
                 tokens = token_filter_func(tokens)
             ret = [t for t in tokens if t != " "]
             if not ret:
@@ -123,9 +127,8 @@ class Segmenter(object):
             return ret
         # English 
         elif langid.classify(sentence)[0] == "en":
-            tokens = self.tokenize(sentence)
-            # return [stemmer.stem(w.lower()) for w in tokens if w.lower() not in self._stopwords]
-            return [w.lower() for w in tokens]
+            tokens = word_tokenize(sentence)
+            return [stemmer.stem(w.lower()) for w in tokens if w.lower() not in self._stopwords and w != " "]
         else:
             tokens = self.tokenize(sentence)
             for token_filter_func in [self._remove_synonyms, self._remove_stopwords]:
@@ -170,6 +173,7 @@ def main():
     print(cut.process_sentence('I have a pen.'))
     print(cut.process_sentence('I have 1张饭卡.'))
     print(cut.extract_noun('往饭卡里充的钱没有充进去怎么办？'))
+
 
 if __name__ == "__main__":
     main()

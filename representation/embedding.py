@@ -3,18 +3,18 @@
 Distributed Representation for Sentence.
 
 AUTHOR: Yue Peng
-EMAIL: yuepeng@sf-express.com
+EMAIL: ypeng7@outlook.com
 DATE: 2018.10.08
 """
 import os, sys
 import numpy as np
 import gensim
 from copy import deepcopy
-sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, os.pardir))
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
 from config import Config
-from cores.utils import log
-from cores.utils.segmenter import Segmenter
-from cores.utils.tfidf import word_idf, sif_embedding, get_weighted_average
+from utils import log
+from utils.segmenter import Segmenter
+from utils.tfidf import word_idf, sif_embedding, get_weighted_average
 
 
 config = Config()
@@ -23,12 +23,13 @@ logger = log.getLogger(__name__)
 
 
 class Embedding(object):
-    def __init__(self, documents, data_seg):
+    def __init__(self, embedding_path, documents, data_seg):
         # default pre-trained word embedding
-        self._word_embedding = gensim.models.KeyedVectors.load_word2vec_format(config.embedding, binary=True)
+        self._word_embedding = gensim.models.KeyedVectors.load_word2vec_format(embedding_path, binary=True)
+        # Topic clusters documents
         self.documents = documents
         self.data_seg = data_seg
-        self.weight_of_word = word_idf(self.documents)
+        self.weights_of_words = word_idf(self.documents)
         # initized some components for sentence embedding
         self.word2idx, self.wv_mat = None, None
         self._word2vec()
@@ -59,12 +60,13 @@ class Embedding(object):
         self.sentence_words_weights = []
         for i, q in enumerate(self.data_seg):
             if not q:
-                logger.warning("Index %s" % i)
+                logger.warning("Index %s has no words" % i)
+                # Treated as UNK
                 self.sentence_words_weights.append(np.array([0]))
                 continue
             sentence_weight = np.zeros([len(q)])
             for i, w in enumerate(q):
-                sentence_weight[i] = self.weight_of_word.get(w, 0.0)
+                sentence_weight[i] = self.weights_of_words.get(w, 0.0)
             self.sentence_words_weights.append(sentence_weight)
 
     def _data_to_index(self):
@@ -79,30 +81,33 @@ class Embedding(object):
             self.data_seg_index.append(res)
 
     def sif_embedding(self):
+        """
+            Smooth Inverse Frequency
+        :return: array of embedding
+        """
         embeddings = get_weighted_average(self.wv_mat, self.data_seg_index, self.sentence_words_weights)
         return sif_embedding(embeddings)
 
     @staticmethod
     def padding(data_seg, max_len, type="repeat"):
         data = deepcopy(data_seg)
+        padded_dat = [0] * len(data)
         if type == "repeat":
-            padded_dat = [0] * len(data)
             for i, d in enumerate(data):
                 if not d:
                     padded_dat[i] = ["UNK"] * max_len
                     continue
-                while len(d) > 0 and len(d) < max_len:
+                while 0 < len(d) < max_len:
                     d += d
                     if len(d) >= max_len:
                         padded_dat[i] = d[:max_len]
                 padded_dat[i] = d[:max_len]
         elif type == "unk":
-            padded_dat = [0] * len(data)
             for i, d in enumerate(data):
                 if not d:
                     padded_dat[i] = ["UNK"] * max_len
                     continue
-                if len(d) > 0 and len(d) < max_len:
+                if 0 < len(d) < max_len:
                     d += ["UNK"] * (max_len - len(d))
                 padded_dat[i] = d[:max_len]
         return padded_dat
@@ -114,10 +119,10 @@ class Embedding(object):
             data = deepcopy(self.data_seg)
         vectors = []
         for _, s in enumerate(data):
-            word_vector = np.zeros([1, 300])
+            word_vector = np.zeros([1, self._word_embedding.vector_size])
             for w in s:
                 try:
-                    word_vector += self.word_embedding.get_vector(w) * self.weight_of_word.get(w, 1.0)
+                    word_vector += self.word_embedding.get_vector(w) * self.weights_of_words.get(w, 1.0)
                 except KeyError as e:
                     logger.info(e)
                     word_vector += self.word_embedding.get_vector("UNK")
@@ -126,14 +131,9 @@ class Embedding(object):
 
 
 def main(argv=None):
-    from cores.dataset.data_helper import data_extract
-    from cores.features.corpus import label_words_cluster
-    qs, label, qs_test, label_test, label2id, id2label = data_extract(task="4")
-    documents = label_words_cluster(qs+qs_test, label+label_test, label2id)
-    from cores.utils.segmenter import Segmenter
-    cut = Segmenter()
-    qs_seg = list(map(lambda x: cut.process_sentence(x), qs))
-    emb = Embedding(documents, qs_seg)
+    qs_seg = [["你好啊，我叫机器人", "你好，世界"]]
+    documents = [["机器人的世界欢迎你"]]
+    emb = Embedding(embedding_path=None, documents=documents, data_seg=qs_seg)
     print(emb.sif_embedding().shape)
     print(emb.weighted_sum_embedding().shape)
 

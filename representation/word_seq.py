@@ -3,11 +3,9 @@
 Encode a list(or string) and decode
 
 AUTHOR: Yue Peng
-EMAIL: yuepeng@sf-express.com
+EMAIL: ypeng7@outlook.com
 DATE: 2018.10.10
 """
-import os, sys
-sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir))
 import numpy as np
 
 
@@ -120,7 +118,7 @@ class WordSequence(object):
         return ret
 
 
-def main(argv=None):
+def main():
     ws = WordSequence()
     ws.fit([
         ['第', '一', '句', '话'],
