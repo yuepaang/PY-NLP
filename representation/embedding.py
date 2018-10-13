@@ -132,7 +132,7 @@ class Embedding(object):
 
 def main(argv=None):
     qs_seg = [["你好啊，我叫机器人", "你好，世界"]]
-    documents = [["机器人的世界欢迎你"]]
+    documents = ["机器人的世界欢迎你"]
     emb = Embedding(embedding_path=None, documents=documents, data_seg=qs_seg)
     print(emb.sif_embedding().shape)
     print(emb.weighted_sum_embedding().shape)
