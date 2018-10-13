@@ -20,6 +20,7 @@ cut = Segmenter()
 logger = log.getLogger(__name__)
 
 
+@log_time_delta
 def label_words_cluster(sentences, labels, label2id):
     """words clustering based on labels
     
