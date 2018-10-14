@@ -1,23 +1,20 @@
-<<<<<<< HEAD
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+Dataset, Estimator API of Tensorflow
+
 # @Date    : 2018-10-13
 # @Author  : Yue Peng (ypeng7@outlook.com)
-"""
-    Estimator API of TensorFlow
 """
 import sys, os
 import tensorflow as tf
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, os.pardir)))
 from config import Config
-from cores.fengbot.classification.model import data_preprocessing
-from cores.utils.log import getLogger
+from utils.log import getLogger
 
 
 config = Config()
 logger = getLogger(__name__)
-
-
-qs_embedded, y, qs_test_embedded, y_test, id2label = data_preprocessing(task="42")
 
 # TODO:
 # writer = tf.python_io.TFRecordWriter("%s.tfrecord" % "test")
@@ -27,18 +24,18 @@ qs_embedded, y, qs_test_embedded, y_test, id2label = data_preprocessing(task="42
 #     features["matrix"] = tf.train.Feature(float_list=tf.train.FloatList(value=qs_embedded[i].reshape(-1)))
 
 
-def train_input_fn():
-    dataset = tf.data.Dataset.from_tensor_slices((qs_embedded, y))
-    dataset = dataset.shuffle(buffer_size=len(qs_embedded))
-    dataset = dataset.batch(256)
-    dataset = dataset.repeat(50)
+def train_input_fn(features, labels, batch_size, epoch):
+    dataset = tf.data.Dataset.from_tensor_slices((features, labels))
+    dataset = dataset.shuffle(buffer_size=len(features))
+    dataset = dataset.batch(batch_size)
+    dataset = dataset.repeat(epoch)
     iterator = dataset.make_one_shot_iterator()
     return iterator.get_next()
 
 
-def eval_input_fn():
-    dataset = tf.data.Dataset.from_tensor_slices((qs_test_embedded, y_test))
-    dataset = dataset.batch(len(qs_test_embedded))
+def eval_input_fn(features, labels):
+    dataset = tf.data.Dataset.from_tensor_slices((features, labels))
+    dataset = dataset.batch(len(features))
     iterator = dataset.make_one_shot_iterator()
     return iterator.get_next()
 
@@ -81,21 +78,3 @@ classifier = tf.estimator.Estimator(model_fn=model_fn, model_dir="./py/")
 classifier.train(input_fn=train_input_fn)
 
 eval_res = classifier.evaluate(input_fn=eval_input_fn)
-=======
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-"""
-Dataset, Estimator API of Tensorflow
-
-# @Date    : 2018-10-13
-# @Author  : Yue Peng (ypeng7@outlook.com)
-"""
-import os
-import sys
-import tensorflow as tf
-sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
-
-
-def train_input_fn():
-    x = tf.data.Dataset.from_tensor_slices()
->>>>>>> 8b80b44912544efc93f4fecdce0494e49a364077
