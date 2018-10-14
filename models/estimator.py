@@ -16,6 +16,33 @@ from utils.log import getLogger
 config = Config()
 logger = getLogger(__name__)
 
+# Show debugging output
+tf.logging.set_verbosity(tf.logging.DEBUG)
+
+# Set default flags for the output directories
+FLAGS = tf.app.flags.FLAGS
+tf.app.flags.DEFINE_string(flag_name="model_dir", default_value="./py", docstring="Output directory for model and training stats.")
+
+PREDICT = tf.estimator.ModeKeys.PREDICT
+EVAL = tf.estimator.ModeKeys.EVAL
+TRAIN = tf.estimator.ModeKeys.TRAIN
+
+
+def build_estimator(config, params):
+    """Build the estimator based on the given config and params
+    
+    [description]
+    
+    Args:
+        config: [description]
+        params: [description]
+    """
+    return tf.estimator.Estimator(
+        model_fn=model_fn,
+        config=config
+        params=params)
+
+
 # TODO:
 # writer = tf.python_io.TFRecordWriter("%s.tfrecord" % "test")
 
@@ -26,9 +53,9 @@ logger = getLogger(__name__)
 
 def train_input_fn(features, labels, batch_size, epoch):
     dataset = tf.data.Dataset.from_tensor_slices((features, labels))
-    dataset = dataset.shuffle(buffer_size=len(features))
-    dataset = dataset.batch(batch_size)
+    dataset = dataset.shuffle(buffer_size=len(features), reshuffle_each_iteration=True)
     dataset = dataset.repeat(epoch)
+    dataset = dataset.batch(batch_size)
     iterator = dataset.make_one_shot_iterator()
     return iterator.get_next()
 
@@ -40,11 +67,28 @@ def eval_input_fn(features, labels):
     return iterator.get_next()
 
 
-def model_fn(features, labels, mode):
-    x = tf.layers.dropout(inputs=features, rate=0.5, name="dropout1")
+def network(inputs, mode):
+    """Return the output operation following the network architecture.
+    
+    [description]
+    
+    Args:
+        inputs: [description]
+        mode: [description]
+    
+    Returns:
+        [description]
+        [type]
+    """
+    x = tf.layers.dropout(inputs=inputs, rate=0.5, name="dropout1")
     x = tf.layers.dense(inputs=x, units=1024, activation=tf.nn.relu, name="dense1")
     x = tf.layers.dense(inputs=x, units=512, activation=tf.nn.relu, name="dense2")
     logits = tf.layers.dense(inputs=x, units=42, name="output")
+    return logits
+
+
+def model_fn(features, labels, mode):
+    logits = network(features)
     predictions = {
         "classes": tf.argmax(input=logits, axis=1, name="classes"),
         "probabilities": tf.nn.softmax(logits=logits, name="softmax_tensor")
