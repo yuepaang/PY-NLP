@@ -55,8 +55,12 @@ class Segmenter(object):
     @stopwords.setter
     def stopwords(self, value):
         if not isinstance(value, list):
-            raise ValueError("Stopwords must be a list!")
+            raise TypeError("Stopwords must be a list!")
         self._stopwords = value
+
+    @stopwords.deleter
+    def stopwords(self):
+        raise AttributeError("Can't delete attribute!")
 
     @property
     def synonyms(self):
@@ -65,8 +69,12 @@ class Segmenter(object):
     @synonyms.setter
     def synonyms(self, value):
         if not isinstance(value, dict):
-            raise ValueError("Synonyms must be a dictionary!")
+            raise TypeError("Synonyms must be a dictionary!")
         self._synonyms = value
+
+    @synonyms.deleter
+    def synonyms(self):
+        raise AttributeError("Can't delete attribute!")
 
     def _remove_stopwords(self, tokens):
         for t in tokens:
