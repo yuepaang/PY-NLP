@@ -6,7 +6,9 @@ AUTHOR: Yue Peng
 EMAIL: ypeng7@outlook.com
 DATE: 2018.10.02
 """
-import os, sys, codecs, re, pickle
+import os, sys
+import codecs, re, pickle
+import argparse
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
 import jieba
 import jieba.posseg as pseg
@@ -19,7 +21,6 @@ from nltk.stem.porter import PorterStemmer
 import langid
 import logging
 jieba.setLogLevel(logging.INFO)
-
 from config import Config
 
 
@@ -54,8 +55,12 @@ class Segmenter(object):
     @stopwords.setter
     def stopwords(self, value):
         if not isinstance(value, list):
-            raise ValueError("Stopwords must be a list!")
+            raise TypeError("Stopwords must be a list!")
         self._stopwords = value
+
+    @stopwords.deleter
+    def stopwords(self):
+        raise AttributeError("Can't delete attribute!")
 
     @property
     def synonyms(self):
@@ -64,8 +69,12 @@ class Segmenter(object):
     @synonyms.setter
     def synonyms(self, value):
         if not isinstance(value, dict):
-            raise ValueError("Synonyms must be a dictionary!")
+            raise TypeError("Synonyms must be a dictionary!")
         self._synonyms = value
+
+    @synonyms.deleter
+    def synonyms(self):
+        raise AttributeError("Can't delete attribute!")
 
     def _remove_stopwords(self, tokens):
         for t in tokens:
@@ -167,13 +176,17 @@ class Segmenter(object):
         return res
 
 
-def main():
+def main(args):
     cut = Segmenter()
-    print(cut.process_sentence('往饭卡里充的钱没有充进去怎么办？'))
-    print(cut.process_sentence('I have a pen.'))
-    print(cut.process_sentence('I have 1张饭卡.'))
-    print(cut.extract_noun('往饭卡里充的钱没有充进去怎么办？'))
+    print(cut.process_sentence(args.sentence))
+    # print(cut.process_sentence('往饭卡里充的钱没有充进去怎么办？'))
+    # print(cut.process_sentence('I have a pen.'))
+    # print(cut.process_sentence('I have 1张饭卡.'))
+    # print(cut.extract_noun('往饭卡里充的钱没有充进去怎么办？'))
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Enter an sentence!")
+    parser.add_argument("--sentence", help="input an sentence you want to segment please~~", type=str)
+    args = parser.parse_args()
+    main(args)

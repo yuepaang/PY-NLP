@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # -*- coding: utf-8 -*-
 # @Date    : 2018-10-13
 # @Author  : Yue Peng (ypeng7@outlook.com)
@@ -80,3 +81,21 @@ classifier = tf.estimator.Estimator(model_fn=model_fn, model_dir="./py/")
 classifier.train(input_fn=train_input_fn)
 
 eval_res = classifier.evaluate(input_fn=eval_input_fn)
+=======
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+Dataset, Estimator API of Tensorflow
+
+# @Date    : 2018-10-13
+# @Author  : Yue Peng (ypeng7@outlook.com)
+"""
+import os
+import sys
+import tensorflow as tf
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
+
+
+def train_input_fn():
+    x = tf.data.Dataset.from_tensor_slices()
+>>>>>>> 8b80b44912544efc93f4fecdce0494e49a364077

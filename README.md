@@ -1,13 +1,19 @@
-# PY-NLP
+## Some Chinese Standardized NLP Tools
 
-## Some Chinese standardized nlp tools
+#### Author: Yue Peng
 
-### Author: Yue Peng
+1. Segmenter
 
-- Segmenter
+    - segment based on *jieba*. (an open-source python lib)
 
-    - based on __jieba__ (an open-source python lib)
+    - remove stop words. (a txt file includes stop words)
 
-    - remove stop words
+    - transform some synonyms to certain word.
+
+    - **usage**
+
+    ```bash
+        python segmenter.py --sentence "自然语言处理一点都不好玩！"
+    ```
 
 
