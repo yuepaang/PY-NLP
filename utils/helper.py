@@ -8,7 +8,6 @@ DATE: 2018.10.02
 """
 import sys, os
 from functools import wraps
-sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
 
 
 # def singleton(class_):

@@ -6,7 +6,8 @@ AUTHOR: Yue Peng
 EMAIL: ypeng7@outlook.com
 DATE: 2018.10.08
 """
-import os, sys
+import os
+import sys
 import numpy as np
 import gensim
 from copy import deepcopy

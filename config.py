@@ -7,10 +7,10 @@ EMAIL: ypeng7@outlook.com
 DATE: 2018.10.02
 """
 import sys, os, codecs
-sys.path.append(os.path.dirname(__file__))
+# sys.path.append(os.path.dirname(__file__))
 import configparser
 from time import localtime, strftime
-from utils.helper import singleton
+from utils.helper import Singleton
 
 CONF_DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -74,7 +74,7 @@ def read_properties(filename="config.ini"):
     return conf
 
 
-@singleton
+@Singleton
 class Config(object):
     """docstring for Config"""
     def __init__(self, ):
