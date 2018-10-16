@@ -6,7 +6,8 @@ AUTHOR: Yue Peng
 EMAIL: ypeng7@outlook.com
 DATE: 2018.10.09
 """
-import os, sys
+import os
+import sys
 from copy import deepcopy
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, os.pardir))
 from config import Config

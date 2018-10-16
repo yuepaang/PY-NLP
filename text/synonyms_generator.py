@@ -44,6 +44,10 @@ def generate_vocab(text_data):
 
 
 def generate_synonyms():
+    """
+        Create synonyms based on the vocab we created
+    :return:
+    """
     with codecs.open(config.vocab_path, "rb") as f:
         vocab = pickle.load(f)
     synonyms_dict = {}
