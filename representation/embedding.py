@@ -72,10 +72,10 @@ class Embedding(object):
         for word_list in self.data_seg:
             res = []
             if not word_list:
-                self.data_seg_index.append(self.word2idx["UNK"])
+                self.data_seg_index.append(self.word2idx["你好"])
                 continue
             for w in word_list:
-                res.append(self.word2idx.get(w, self.word2idx["UNK"]))
+                res.append(self.word2idx.get(w, self.word2idx["你好"]))
             self.data_seg_index.append(res)
 
     def sif_embedding(self):
@@ -123,7 +123,7 @@ class Embedding(object):
                     word_vector += self.word_embedding.get_vector(w) * self.weights_of_words.get(w, 1.0)
                 except KeyError as e:
                     logger.info(e)
-                    word_vector += self.word_embedding.get_vector("UNK")
+                    word_vector += self.word_embedding.get_vector("你好")
             vectors.append(word_vector)
         return np.array(vectors).reshape([len(data), -1])
 
@@ -131,7 +131,8 @@ class Embedding(object):
 def main(argv=None):
     qs_seg = [["你好啊，我叫机器人", "你好，世界"]]
     documents = ["机器人的世界欢迎你"]
-    emb = Embedding(embedding_path=None, documents=documents, data_seg=qs_seg)
+    embedding_path = os.path.join(config.ini["dataDir"], config.ini["data"]["embedding_fn"])
+    emb = Embedding(embedding_path=embedding_path, documents=documents, data_seg=qs_seg)
     print(emb.sif_embedding().shape)
     print(emb.weighted_sum_embedding().shape)
 
