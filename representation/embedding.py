@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
-"""
-Distributed Representation for Sentence.
-
-AUTHOR: Yue Peng
-EMAIL: ypeng7@outlook.com
-DATE: 2018.10.08
-"""
+# @Author: Yue Peng
+# @Email: yuepaang@gmail.com
+# Date: Oct 21, 2018
+# Created on: 00:59:12
 import os
 import sys
 import numpy as np

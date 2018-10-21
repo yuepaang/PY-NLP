@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
-"""
-Segmenter. Transform Sentence to Words
-
-AUTHOR: Yue Peng
-EMAIL: ypeng7@outlook.com
-DATE: 2018.10.02
-"""
+# @Author: Yue Peng
+# @Email: yuepaang@gmail.com
+# Date: Oct 21, 2018
+# Created on: 10:18:39
 import os, sys
 import codecs, re, pickle
 import argparse

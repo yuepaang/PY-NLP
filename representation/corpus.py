@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
-"""
-Corpus engineering.
-
-AUTHOR: Yue Peng
-EMAIL: ypeng7@outlook.com
-DATE: 2018.10.09
-"""
+# @Author: Yue Peng
+# @Email: yuepaang@gmail.com
+# Date: Oct 21, 2018
+# Created on: 00:59:23
 import os
 import sys
 from copy import deepcopy

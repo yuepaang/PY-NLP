@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-"""
-TF-IDF Computation.
-
-AUTHOR: Yue Peng
-EMAIL: ypeng7@outlook.com
-DATE: 2018.10.03
-"""
-import os, sys, math
+# @Author: Yue Peng
+# @Email: yuepaang@gmail.com
+# Date: Oct 21, 2018
+# Created on: 10:15:59
+import os
+import sys
+import math
 import numpy as np
 from sklearn.decomposition import TruncatedSVD
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, os.pardir))
@@ -39,7 +38,7 @@ def sublinear_term_frequency(term, tokenized_document):
 
 def augmented_term_frequency(term, tokenized_document):
     max_count = max([term_frequency(t, tokenized_document) for t in tokenized_document])
-    return (0.5 + ((0.5 * term_frequency(term, tokenized_document))/max_count))
+    return (0.5 + ((0.5 * term_frequency(term, tokenized_document)) / max_count))
 
 
 def inverse_document_frequencies(tokenized_documents):
@@ -47,7 +46,7 @@ def inverse_document_frequencies(tokenized_documents):
     all_tokens_set = set([item for sublist in tokenized_documents for item in sublist])
     for tkn in all_tokens_set:
         contains_token = map(lambda doc: tkn in doc, tokenized_documents)
-        idf_values[tkn] = 1 + math.log(len(tokenized_documents)/(sum(contains_token)))
+        idf_values[tkn] = 1 + math.log(len(tokenized_documents) / (sum(contains_token)))
     return idf_values
 
 

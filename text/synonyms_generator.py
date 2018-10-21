@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
-"""
-Synonyms Generator based on dataset we owned.
-
-AUTHOR: Yue Peng
-EMAIL: ypeng7@outlook.com
-DATE: 2018.10.02
-"""
+# @Author: Yue Peng
+# @Email: yuepaang@gmail.com
+# Date: Oct 21, 2018
+# Created on: 00:59:34
 import os, sys, codecs, pickle
 import synonyms
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
