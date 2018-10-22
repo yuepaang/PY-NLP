@@ -13,6 +13,7 @@ from config import Config
 from utils import log
 from utils.segmenter import Segmenter
 from utils.tfidf import word_idf, sif_embedding, get_weighted_average
+from utils.tools import load_embedding, cosine
 
 
 config = Config()
@@ -126,6 +127,27 @@ class Embedding(object):
                     word_vector += self.word_embedding.get_vector("你好")
             vectors.append(word_vector)
         return np.array(vectors).reshape([len(data), -1])
+
+
+class BagofWordSimilarity(object):
+    def __init__(self, sentence, emb_fn):
+        self.sentence = sentence
+        self.embedding, self.word2index, self.padding_value = load_embedding(emb_fn)
+        self.vec_size = self.embedding.shape[0]
+
+    def sentence_embedding(self):
+        init_emb = np.zeros(self.vec_size)
+        words = self.sentence.strip().split(" ")
+        for i in range(self.vec_size):
+            tmp = [0.] * len(words)
+            for i, word in enumerate(words):
+                if word in self.word2index:
+                    tmp[i] = cosine(self.embedding[self.word2index[word], :], self.embedding[i, :])
+                else:
+                    tmp[i] = cosine(self.embedding[0, :], self.embedding[i, :])
+            init_emb[i] = max(tmp)
+            del tmp
+        return init_emb
 
 
 def main(argv=None):

@@ -6,7 +6,7 @@
 import os
 import sys
 import codecs
-from gensim.models.word2vec import Word2Vec
+import gensim
 sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir))
 from config import Config
 
@@ -22,7 +22,7 @@ class MySentence(object):
 
     def __iter__(self):
         for line in codecs.open(self.file_path, "r", "utf-8"):
-            words = line.split(" ")
+            words = line.strip().split(" ")
             result_word = []
             for word in words:
                 if word and word != "\n":
@@ -35,7 +35,7 @@ def main():
     txt_path = config.ini["dataDir"] + "/case.txt"
     file_path = config.ini["dataDir"] + "/case_embedding.bin"
     sentences = MySentence(file_path=txt_path)
-    model = Word2Vec(sentences, workers=4, size=200)
+    model = gensim.models.Word2Vec([s for s in sentences], workers=4, size=200)
     if trainable is True:
         model.save(file_path)
     else:
