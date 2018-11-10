@@ -66,7 +66,6 @@ class args:
 	num_filters = 64
 	num_classes = 638
 	dropout = 0.5
-	# TODO: Maybe use a larger lr
 	learning_rate = 1e-2
 	log_interval = 300
 
