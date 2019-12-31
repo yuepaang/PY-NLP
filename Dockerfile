@@ -1,6 +1,6 @@
 # FROM ufoym/deepo:all-jupyter-py36-cu90
-FROM 10.202.107.19/sfai/tmn:q2q
-MAINTAINER yuepeng@sf-express.com
+FROM sfai/tmn:q2q
+MAINTAINER yuepaang@gmail.com
 
 ADD . /tmn
 
